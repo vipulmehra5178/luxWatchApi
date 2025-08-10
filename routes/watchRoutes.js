@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get("/", getWatches);
 router.get("/:id", getWatchById);
-router.post("/", protect, createWatch); // protected route
+router.post("/", protect, createWatch); 
 router.put("/:id", protect, updateWatch);
 router.delete("/:id", protect, deleteWatch);
 

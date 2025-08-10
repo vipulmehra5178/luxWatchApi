@@ -1,6 +1,5 @@
 import Watch from "../models/Watch.js";
 
-// Get all watches
 export const getWatches = async (req, res) => {
   try {
     const watches = await Watch.find().lean(); // lean() for faster response
@@ -10,7 +9,6 @@ export const getWatches = async (req, res) => {
   }
 };
 
-// Get single watch
 export const getWatchById = async (req, res) => {
   try {
     const watch = await Watch.findOne({ id: req.params.id }).lean();
@@ -21,7 +19,6 @@ export const getWatchById = async (req, res) => {
   }
 };
 
-// Create watch (Auth protected)
 export const createWatch = async (req, res) => {
   try {
     const newWatch = await Watch.create(req.body);
@@ -31,7 +28,6 @@ export const createWatch = async (req, res) => {
   }
 };
 
-// Update watch
 export const updateWatch = async (req, res) => {
   try {
     const updatedWatch = await Watch.findOneAndUpdate(
@@ -46,7 +42,6 @@ export const updateWatch = async (req, res) => {
   }
 };
 
-// Delete watch
 export const deleteWatch = async (req, res) => {
   try {
     const deletedWatch = await Watch.findOneAndDelete({ id: req.params.id }).lean();

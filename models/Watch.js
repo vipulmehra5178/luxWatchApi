@@ -39,6 +39,6 @@ const WatchSchema = new mongoose.Schema({
   reviews: [ReviewSchema],
 }, { timestamps: true });
 
-WatchSchema.index({ title: 1, brand: 1 }); // 🔹 Faster queries
+WatchSchema.index({ title: 1, brand: 1 }); 
 
 export default mongoose.model("Watch", WatchSchema);
