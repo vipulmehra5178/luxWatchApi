@@ -1,13 +1,13 @@
 import express from "express";
-import { getWatches, getWatchById, addWatch, updateWatch, deleteWatch } from "../controllers/watchController.js";
-import { protect } from "../middleware/authMiddleware.js";
+import { getWatches, getWatchById, createWatch, updateWatch, deleteWatch } from "../controllers/watchController.js";
+import protect from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
 router.get("/", getWatches);
 router.get("/:id", getWatchById);
-router.post("/", protect, addWatch); // only logged-in users can post
-router.put("/:id", updateWatch);
-router.delete("/:id", deleteWatch);
+router.post("/", protect, createWatch); // protected route
+router.put("/:id", protect, updateWatch);
+router.delete("/:id", protect, deleteWatch);
 
 export default router;

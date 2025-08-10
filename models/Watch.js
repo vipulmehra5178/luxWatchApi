@@ -16,27 +16,29 @@ const WatchSchema = new mongoose.Schema({
   discount: { type: Number, default: 0 },
   images: { type: [String], required: true },
   technical_specs: {
-    dial_size: { type: String },
-    strap_material: { type: String },
-    water_resistance: { type: String },
-    movement_type: { type: String },
-    battery_life: { type: String },
-    features: { type: [String] },
+    dial_size: String,
+    strap_material: String,
+    water_resistance: String,
+    movement_type: String,
+    battery_life: String,
+    features: [String],
   },
   sku: { type: String, unique: true },
-  manufacturer: { type: String },
-  country_of_origin: { type: String },
-  warranty_period: { type: String },
+  manufacturer: String,
+  country_of_origin: String,
+  warranty_period: String,
   rating: { type: Number, default: 0, min: 0, max: 5 },
   inventory: {
     quantity_in_stock: { type: Number, required: true, min: 0 },
   },
   shipping: {
-    delivery_time: { type: String },
-    charges: { type: Number },
-    options: { type: [String] },
+    delivery_time: String,
+    charges: Number,
+    options: [String],
   },
   reviews: [ReviewSchema],
 }, { timestamps: true });
+
+WatchSchema.index({ title: 1, brand: 1 }); // 🔹 Faster queries
 
 export default mongoose.model("Watch", WatchSchema);

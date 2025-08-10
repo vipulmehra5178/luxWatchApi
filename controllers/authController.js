@@ -1,37 +1,43 @@
 import User from "../models/User.js";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
 
-const JWT_SECRET = "supersecretkey"; // move to .env
+const generateToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+};
 
-// Signup
-export const signup = async (req, res) => {
+export const registerUser = async (req, res) => {
+  const { username, email, password } = req.body;
   try {
-    const { name, email, password } = req.body;
-    const exists = await User.findOne({ email });
-    if (exists) return res.status(400).json({ error: "User already exists" });
+    const userExists = await User.findOne({ email }).lean();
+    if (userExists) return res.status(400).json({ message: "User already exists" });
 
-    const user = new User({ name, email, password });
-    await user.save();
-    res.json({ message: "Signup successful" });
+    const user = await User.create({ username, email, password });
+    res.status(201).json({
+      _id: user.id,
+      username: user.username,
+      email: user.email,
+      token: generateToken(user.id)
+    });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ message: err.message });
   }
 };
 
-// Login
-export const login = async (req, res) => {
+export const loginUser = async (req, res) => {
+  const { email, password } = req.body;
   try {
-    const { email, password } = req.body;
     const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ error: "Invalid credentials" });
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ error: "Invalid credentials" });
-
-    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: "1d" });
-    res.json({ token });
+    if (user && (await user.matchPassword(password))) {
+      res.json({
+        _id: user.id,
+        username: user.username,
+        email: user.email,
+        token: generateToken(user.id)
+      });
+    } else {
+      res.status(401).json({ message: "Invalid email or password" });
+    }
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ message: err.message });
   }
 };
