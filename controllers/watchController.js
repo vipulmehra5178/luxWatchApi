@@ -2,7 +2,7 @@ import Watch from "../models/Watch.js";
 
 export const getWatches = async (req, res) => {
   try {
-    const watches = await Watch.find().lean(); // lean() for faster response
+    const watches = await Watch.find().lean();
     res.json(watches);
   } catch (err) {
     res.status(500).json({ message: "Error fetching watches" });
@@ -35,7 +35,8 @@ export const updateWatch = async (req, res) => {
       req.body,
       { new: true }
     ).lean();
-    if (!updatedWatch) return res.status(404).json({ message: "Watch not found" });
+    if (!updatedWatch)
+      return res.status(404).json({ message: "Watch not found" });
     res.json(updatedWatch);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -44,8 +45,11 @@ export const updateWatch = async (req, res) => {
 
 export const deleteWatch = async (req, res) => {
   try {
-    const deletedWatch = await Watch.findOneAndDelete({ id: req.params.id }).lean();
-    if (!deletedWatch) return res.status(404).json({ message: "Watch not found" });
+    const deletedWatch = await Watch.findOneAndDelete({
+      id: req.params.id,
+    }).lean();
+    if (!deletedWatch)
+      return res.status(404).json({ message: "Watch not found" });
     res.status(204).send();
   } catch (err) {
     res.status(500).json({ message: err.message });
